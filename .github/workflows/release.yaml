@@ -32,6 +32,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      - name: Get app version
+        id: get-app-version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\/v/}
+
       - name: Tagged release
         if: startsWith(github.ref, 'refs/tags/')
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -39,7 +44,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{github.ref_name}}"
           prerelease: false
-          title: "${GITHUB_REF#refs/*/v}"
+          title: ${{ steps.get-app-version.outputs.version }}
           files: |
             LICENSE
             **/target/mysql-datetime-converter*.jar
