@@ -37,8 +37,9 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ github.ref }}"
+          automatic_release_tag: "${{github.ref_name}}"
           prerelease: false
+          title: "${GITHUB_REF#refs/*/v}"
           files: |
             LICENSE
             **/target/mysql-datetime-converter*.jar
@@ -50,6 +51,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "v${{ github.event.inputs.version }}"
           prerelease: false
+          title: "${{ github.event.inputs.version }}"
           files: |
             LICENSE
             **/target/mysql-datetime-converter*.jar
